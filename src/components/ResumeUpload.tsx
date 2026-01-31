@@ -151,15 +151,14 @@ export default function ResumeUpload() {
         onClick={handleSubmit}
         disabled={loading}
         className="
-          mt-8 w-full py-4 rounded-xl font-semibold
-          bg-gradient-to-r from-indigo-500 to-purple-500
-          text-white
-          transition-all duration-300
-          hover:scale-[1.03]
-          hover:shadow-[0_0_40px_rgba(99,102,241,0.6)]
-          active:scale-95
-          disabled:opacity-60
-        "
+  inline-block px-10 py-4 rounded-xl
+  bg-white text-black font-semibold
+  transition-all duration-300
+  hover:scale-105
+  hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]
+  active:scale-95
+"
+
       >
         {loading ? "Analyzing with AI…" : "Analyze My Resume"}
       </button>
