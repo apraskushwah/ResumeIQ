@@ -117,7 +117,7 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer className="border-t border-white/10 py-10 text-center text-sm text-gray-500">
-        @ 2024 ResumeIQ. All rights reserved.
+        @ 2026 ResumeIQ. All rights reserved.
       </footer>
     </main>
   );
