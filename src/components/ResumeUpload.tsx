@@ -3,6 +3,8 @@
 import { useState } from "react";
 import ResultCard from "./ResultCard";
 import { ResumeResult } from "@/types/resume";
+import { motion } from "framer-motion";
+
 
 export default function ResumeUpload() {
   const [file, setFile] = useState<File | null>(null);
@@ -85,91 +87,137 @@ export default function ResumeUpload() {
       </p>
 
       {/* Upload Zone */}
-      <label
-        onDragEnter={(e) => {
-          e.preventDefault();
-          setIsDragging(true);
-        }}
-        onDragOver={(e) => {
-          e.preventDefault();
-          setIsDragging(true);
-        }}
-        onDragLeave={(e) => {
-          e.preventDefault();
-          setIsDragging(false);
-        }}
-        onDrop={(e) => {
-          e.preventDefault();
-          setIsDragging(false);
-          const dropped = e.dataTransfer.files?.[0];
-          if (dropped) handleFileSelect(dropped);
-        }}
-        className={`
-          mt-8 flex flex-col items-center justify-center
-          w-full h-40
-          rounded-2xl cursor-pointer
-          border-2 border-dashed
-          transition-all duration-300
-          ${
-            isDragging
-              ? "border-indigo-400 bg-indigo-500/10 scale-[1.02]"
-              : "border-white/20 hover:border-white/40 hover:bg-white/5"
-          }
-        `}
-      >
-        <input
-          type="file"
-          accept="application/pdf"
-          className="hidden"
-          onChange={(e) =>
-            e.target.files && handleFileSelect(e.target.files[0])
-          }
-        />
+     {/* Upload Zone */}
+<motion.label
+  onDragEnter={(e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }}
+  onDragOver={(e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  }}
+  onDragLeave={(e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  }}
+  onDrop={(e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const dropped = e.dataTransfer.files?.[0];
+    if (dropped) handleFileSelect(dropped);
+  }}
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: "easeOut" }}
+  whileHover={{ scale: 1.015 }}
+  className={`
+    relative mt-8 flex flex-col items-center justify-center
+    w-full h-44 sm:h-40
+    rounded-2xl cursor-pointer
+    border-2 border-dashed
+    backdrop-blur-xl
+    transition-all duration-300
+    overflow-hidden
+    ${
+      isDragging
+        ? "border-indigo-400 bg-indigo-500/15 shadow-[0_0_40px_rgba(99,102,241,0.4)]"
+        : "border-white/20 bg-white/5 hover:border-white/40 hover:bg-white/10"
+    }
+  `}
+>
+  {/* animated glow */}
+  <motion.div
+    aria-hidden
+    className="absolute inset-0 rounded-2xl"
+    animate={{
+      opacity: isDragging ? 0.6 : 0.25,
+    }}
+    transition={{ duration: 0.4 }}
+    style={{
+      background:
+        "radial-gradient(circle at center, rgba(99,102,241,0.35), transparent 70%)",
+    }}
+  />
 
-        <div className="text-center space-y-3 pointer-events-none">
-          <div className="text-4xl">📄</div>
+  <input
+    type="file"
+    accept="application/pdf"
+    className="hidden"
+    onChange={(e) =>
+      e.target.files && handleFileSelect(e.target.files[0])
+    }
+  />
 
-          <p className="text-sm font-medium text-gray-200">
-            {file ? file.name : "Drop your resume here or click to upload"}
-          </p>
+  <div className="relative z-10 text-center space-y-3 pointer-events-none">
+    <motion.div
+      animate={{ y: [0, -6, 0] }}
+      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+      className="text-4xl"
+    >
+      📄
+    </motion.div>
 
-          <p className="text-xs text-gray-500">
-            PDF only • Max 2MB • Secure processing
-          </p>
-        </div>
-      </label>
+    <p className="text-sm sm:text-base font-medium text-gray-200">
+      {file ? file.name : "Drop your resume here or click to upload"}
+    </p>
 
-      {/* Error */}
-      {error && (
-        <p className="mt-4 text-sm text-red-400">
-          {error}
-        </p>
-      )}
+    <p className="text-xs text-gray-500">
+      PDF only • Max 2MB • Secure processing
+    </p>
+  </div>
+</motion.label>
 
-      {/* Button */}
-      <button
-        onClick={handleSubmit}
-        disabled={loading}
-        className="
-  inline-block px-10 py-4 rounded-xl
-  bg-white text-black font-semibold
-  transition-all duration-300
-  hover:scale-105
-  hover:shadow-[0_0_30px_rgba(255,255,255,0.4)]
-  active:scale-95
-"
+{/* Error */}
+{error && (
+  <p className="mt-4 text-sm text-red-400 text-center">
+    {error}
+  </p>
+)}
 
-      >
-        {loading ? "Analyzing with AI…" : "Analyze My Resume"}
-      </button>
+{/* Analyze Button */}
+<motion.button
+  onClick={handleSubmit}
+  disabled={loading}
+  whileHover={{
+    scale: 1.04,
+    boxShadow: "0 0 45px rgba(255,255,255,0.45)",
+  }}
+  whileTap={{ scale: 0.96 }}
+  animate={{
+    y: [0, -5, 0],
+  }}
+  transition={{
+    duration: 2.8,
+    repeat: Infinity,
+    ease: "easeInOut",
+  }}
+  className="
+    mt-6 w-full py-4
+    rounded-xl font-semibold text-lg
+    bg-white text-black
+    transition-all
+    disabled:opacity-60
+  "
+>
+  {loading ? "Analyzing Resume..." : "Analyze My Resume"}
+</motion.button>
 
-      {loading && (
-        <p className="mt-3 text-xs text-gray-400 text-center animate-pulse">
-          Running ATS + skill gap analysis…
-        </p>
-      )}
+<p className="mt-3 text-xs text-center text-gray-500">
+  ⚡ Takes less than 10 seconds • No signup required
+</p>
 
-      {result && <ResultCard {...result} />}
+{loading && (
+  <p className="mt-3 text-xs text-gray-400 text-center animate-pulse">
+    Running ATS + skill gap analysis…
+  </p>
+)}
+
+{result && <ResultCard {...result} />}
     </div>
   );
-}
+}            <p className="text-sm text-gray-400">
+              Understand how well your resume passes through Applicant
+              Tracking Systems used by recruiters.
+            </p>
+          
